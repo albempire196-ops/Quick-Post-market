@@ -1,4 +1,4 @@
-import { Search, Plus, Sparkles, LogOut, Settings, MessageCircle, Menu, Download } from "lucide-react";
+import { Search, Plus, Sparkles, LogOut, Settings, Menu, Download, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -95,16 +95,6 @@ export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProp
 
           {/* Desktop nav items */}
           <div className="hidden sm:flex items-center gap-1">
-            {user && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/chat")}
-                className="w-10 h-10 rounded-xl text-muted-foreground hover:text-foreground"
-              >
-                <MessageCircle className="w-5 h-5" />
-              </Button>
-            )}
             <Button
               variant="ghost"
               size="icon"
@@ -130,6 +120,10 @@ export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProp
                   <DropdownMenuItem onClick={() => navigate("/settings")} className="gap-2 cursor-pointer">
                     <Settings className="w-4 h-4" />
                     {t("settings")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => user && navigate(`/seller/${user.id}`)} className="gap-2 cursor-pointer">
+                    <UserRound className="w-4 h-4" />
+                    My profile
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive cursor-pointer">
                     <LogOut className="w-4 h-4" />
@@ -191,11 +185,11 @@ export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProp
 
                   {user && (
                     <button
-                      onClick={() => { navigate("/chat"); setMobileMenuOpen(false); }}
+                      onClick={() => { navigate(`/seller/${user.id}`); setMobileMenuOpen(false); }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left hover:bg-secondary/80 transition-colors"
                     >
-                      <MessageCircle className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium">{"Messages"}</span>
+                      <UserRound className="w-5 h-5 text-muted-foreground" />
+                      <span className="font-medium">My profile</span>
                     </button>
                   )}
 

@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, MessageCircle, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { MapPin, MessageCircle, ChevronLeft, ChevronRight, X, Heart, Flag, UserRound } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import adImage from "@/assets/tadd.webp";
+import { supabase } from "@/integrations/supabase/client";
+import { ProductStatusBadge } from "@/components/ProductStatusBadge";
+// import { useFavorites } from "@/hooks/useFavorites";
+// import { toast } from "sonner";
+import { ReportProductDialog } from "@/components/ReportProductDialog";
 
 interface ProductDetailModalProps {
   open: boolean;
@@ -19,6 +23,7 @@ interface ProductDetailModalProps {
     country?: string | null;
     image_url?: string | null;
     media_urls?: string[] | null;
+    status?: string | null;
     user_id?: string | null;
   } | null;
   countryName?: string;
@@ -27,8 +32,19 @@ interface ProductDetailModalProps {
 export const ProductDetailModal = ({ open, onClose, product, countryName }: ProductDetailModalProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [showAd, setShowAd] = useState(true);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [sellerProfile, setSellerProfile] = useState<{
+    full_name: string | null;
+    avatar_url: string | null;
+    facebook?: string | null;
+    instagram?: string | null;
+    linkedin?: string | null;
+    tiktok?: string | null;
+    twitter?: string | null;
+    website?: string | null;
+  } | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
+  // const { isFavorite, toggleFavorite, busyProductId } = useFavorites();
 
   // Get all media URLs
   const allMedia: string[] = [];
@@ -40,15 +56,26 @@ export const ProductDetailModal = ({ open, onClose, product, countryName }: Prod
     }
   }
 
-  // Show ad for 5 seconds when modal opens
   useEffect(() => {
     if (open && product) {
-      setShowAd(true);
       setCurrentMediaIndex(0);
-      const timer = setTimeout(() => setShowAd(false), 5000);
-      return () => clearTimeout(timer);
     }
   }, [open, product?.id]);
+
+  useEffect(() => {
+    if (!product?.user_id) {
+      setSellerProfile(null);
+      return;
+    }
+    supabase
+      .from("profiles_public")
+      .select("full_name, avatar_url, facebook, instagram, linkedin, tiktok, twitter, website")
+      .eq("id", product.user_id)
+      .single()
+      .then(({ data }) => {
+        setSellerProfile(data || null);
+      });
+  }, [product?.user_id]);
 
   const isVideo = (url: string) => {
     return /\.(mp4|webm|mov|quicktime)(\?|$)/i.test(url) || url.includes("video");
@@ -61,27 +88,7 @@ export const ProductDetailModal = ({ open, onClose, product, countryName }: Prod
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-2xl">
-        {showAd ? (
-          <div className="relative flex items-center justify-center bg-black min-h-[300px] sm:min-h-[400px]">
-            <img
-              src={adImage}
-              alt="Ad"
-              className="w-full h-full object-contain max-h-[70vh]"
-            />
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
-              Reklama mbyllet automatikisht...
-            </div>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-3 right-3 text-white hover:bg-white/20 rounded-full"
-              onClick={() => setShowAd(false)}
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-        ) : (
-          <>
+        <>
             {/* Media Section */}
             <div className="relative bg-secondary/30 min-h-[250px] sm:min-h-[400px]">
               {allMedia.length > 0 ? (
@@ -151,10 +158,72 @@ export const ProductDetailModal = ({ open, onClose, product, countryName }: Prod
                     <span>{countryName || "Global"}</span>
                   </div>
                 </div>
-                <Badge variant="secondary" className="shrink-0 rounded-lg">{product.category}</Badge>
+                <div className="flex flex-col items-end gap-2">
+                  <Badge variant="secondary" className="shrink-0 rounded-lg">{product.category}</Badge>
+                  <ProductStatusBadge status={product.status} />
+                </div>
               </div>
 
               <div className="text-2xl sm:text-3xl font-display font-bold text-gradient">{product.price}</div>
+
+              <div className="flex flex-col gap-2">
+                {/* Seller info and socials */}
+                <div className="flex items-center gap-2">
+                  <UserRound className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium">
+                    {sellerProfile?.full_name || "-"}
+                  </span>
+                  {product.user_id && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 rounded-xl ml-2"
+                      onClick={() => {
+                        onClose();
+                        navigate(`/seller/${product.user_id}`);
+                      }}
+                    >
+                      Shiko profilin
+                    </Button>
+                  )}
+                </div>
+                {/* Social links */}
+                {sellerProfile && (
+                  <div className="flex flex-wrap gap-2 items-center">
+                    {sellerProfile.facebook && (
+                      <a href={sellerProfile.facebook} target="_blank" rel="noopener noreferrer" title="Facebook" className="text-blue-600 hover:underline">
+                        <i className="fa-brands fa-facebook" /> Facebook
+                      </a>
+                    )}
+                    {sellerProfile.instagram && (
+                      <a href={sellerProfile.instagram} target="_blank" rel="noopener noreferrer" title="Instagram" className="text-pink-500 hover:underline">
+                        <i className="fa-brands fa-instagram" /> Instagram
+                      </a>
+                    )}
+                    {sellerProfile.linkedin && (
+                      <a href={sellerProfile.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="text-blue-700 hover:underline">
+                        <i className="fa-brands fa-linkedin" /> LinkedIn
+                      </a>
+                    )}
+                    {sellerProfile.tiktok && (
+                      <a href={sellerProfile.tiktok} target="_blank" rel="noopener noreferrer" title="TikTok" className="text-black hover:underline">
+                        <i className="fa-brands fa-tiktok" /> TikTok
+                      </a>
+                    )}
+                    {sellerProfile.twitter && (
+                      <a href={sellerProfile.twitter} target="_blank" rel="noopener noreferrer" title="Twitter" className="text-blue-400 hover:underline">
+                        <i className="fa-brands fa-twitter" /> Twitter
+                      </a>
+                    )}
+                    {sellerProfile.website && (
+                      <a href={sellerProfile.website} target="_blank" rel="noopener noreferrer" title="Website" className="text-green-700 hover:underline">
+                        <i className="fa-solid fa-globe" /> Website
+                      </a>
+                    )}
+                  </div>
+                )}
+                {/* Hiq butonat e tjerë, lër vetëm emrin dhe rrjetet sociale */}
+              </div>
 
               {product.description && (
                 <div className="pt-3 border-t border-border/50">
@@ -162,23 +231,22 @@ export const ProductDetailModal = ({ open, onClose, product, countryName }: Prod
                 </div>
               )}
 
-              {/* Chat button */}
-              {!isOwner && user && product.user_id && (
-                <Button
-                  className="w-full gap-2 rounded-xl h-12"
-                  onClick={() => {
-                    onClose();
-                    navigate(`/chat?productId=${product.id}&sellerId=${product.user_id}`);
-                  }}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Kontakto Shitësin
-                </Button>
-              )}
+              {/* Interested in button removed */}
             </div>
           </>
-        )}
+
       </DialogContent>
+
+      {product && (
+        <ReportProductDialog
+          open={reportOpen}
+          onOpenChange={setReportOpen}
+          productId={product.id}
+          productTitle={product.title}
+          sellerId={product.user_id}
+          sellerName={sellerProfile?.full_name}
+        />
+      )}
     </Dialog>
   );
 };

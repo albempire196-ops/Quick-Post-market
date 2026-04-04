@@ -84,6 +84,27 @@ export type Database = {
           },
         ]
       }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -141,6 +162,7 @@ export type Database = {
           image_url: string | null
           media_urls: Json | null
           price: string
+          status: string
           title: string
           updated_at: string
           user_id: string
@@ -155,6 +177,7 @@ export type Database = {
           image_url?: string | null
           media_urls?: Json | null
           price: string
+          status?: string
           title: string
           updated_at?: string
           user_id: string
@@ -169,9 +192,46 @@ export type Database = {
           image_url?: string | null
           media_urls?: Json | null
           price?: string
+          status?: string
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      product_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          product_id: string
+          reason: string
+          reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          product_id: string
+          reason: string
+          reporter_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          product_id?: string
+          reason?: string
+          reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
         }
         Relationships: []
       }
@@ -182,9 +242,16 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_admin: boolean
           preferred_country: string | null
           preferred_language: string | null
           updated_at: string
+          facebook: string | null
+          instagram: string | null
+          linkedin: string | null
+          tiktok: string | null
+          twitter: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -192,9 +259,16 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          is_admin?: boolean
           preferred_country?: string | null
           preferred_language?: string | null
           updated_at?: string
+          facebook?: string | null
+          instagram?: string | null
+          linkedin?: string | null
+          tiktok?: string | null
+          twitter?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -202,9 +276,16 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_admin?: boolean
           preferred_country?: string | null
           preferred_language?: string | null
           updated_at?: string
+          facebook?: string | null
+          instagram?: string | null
+          linkedin?: string | null
+          tiktok?: string | null
+          twitter?: string | null
+          website?: string | null
         }
         Relationships: []
       }
@@ -220,6 +301,7 @@ export type Database = {
           image_url: string | null
           media_urls: Json | null
           price: string | null
+          status: string | null
           title: string | null
           updated_at: string | null
           user_id: string | null
@@ -233,6 +315,7 @@ export type Database = {
           image_url?: string | null
           media_urls?: Json | null
           price?: string | null
+          status?: string | null
           title?: string | null
           updated_at?: string | null
           user_id?: string | null
@@ -246,6 +329,7 @@ export type Database = {
           image_url?: string | null
           media_urls?: Json | null
           price?: string | null
+          status?: string | null
           title?: string | null
           updated_at?: string | null
           user_id?: string | null
@@ -259,6 +343,13 @@ export type Database = {
           full_name: string | null
           id: string | null
           updated_at: string | null
+          facebook: string | null
+          instagram: string | null
+          linkedin: string | null
+          tiktok: string | null
+          twitter: string | null
+          website: string | null
+          email: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -266,6 +357,12 @@ export type Database = {
           full_name?: string | null
           id?: string | null
           updated_at?: string | null
+          facebook?: string | null
+          instagram?: string | null
+          linkedin?: string | null
+          tiktok?: string | null
+          twitter?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -273,6 +370,12 @@ export type Database = {
           full_name?: string | null
           id?: string | null
           updated_at?: string | null
+          facebook?: string | null
+          instagram?: string | null
+          linkedin?: string | null
+          tiktok?: string | null
+          twitter?: string | null
+          website?: string | null
         }
         Relationships: []
       }
@@ -287,6 +390,7 @@ export type Database = {
           id: string
         }[]
       }
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
       is_product_owner: { Args: { product_id: string }; Returns: boolean }
     }
     Enums: {

@@ -1,4 +1,4 @@
-// Importet duhet të jenë gjithmonë në fillim
+// Imports must always be at the top
 interface AuthPromptModalProps {
   open: boolean;
   onClose: () => void;

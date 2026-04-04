@@ -31,9 +31,9 @@ export const CountrySelectModal = ({ open, onSelectCountry }: CountrySelectModal
             <MapPin className="w-8 h-8 text-primary-foreground" />
           </div>
           <DialogHeader>
-            <DialogTitle className="text-3xl text-primary-foreground font-display">Mirësevjen!</DialogTitle>
+            <DialogTitle className="text-3xl text-primary-foreground font-display">Welcome!</DialogTitle>
             <DialogDescription className="text-primary-foreground/80 text-base mt-2">
-              Zgjidh shtetin tënd për të parë produktet e disponueshme
+              Choose your country to see available products
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -43,7 +43,7 @@ export const CountrySelectModal = ({ open, onSelectCountry }: CountrySelectModal
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Kërko shtetin..."
+              placeholder="Search country..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 h-12 bg-secondary/50 border-0 rounded-xl"

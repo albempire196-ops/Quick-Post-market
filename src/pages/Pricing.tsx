@@ -124,7 +124,7 @@ const Pricing = () => {
                 </div>
 
                 <ul className="space-y-3">
-                  {["Unlimited product listings", "Chat with buyers", "Priority support", "No ads"].map((f) => (
+                  {["Unlimited product listings", "Connect with buyers", "Priority support", "No ads"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm">
                       <Check className="w-4 h-4 text-primary flex-shrink-0" />
                       {f}

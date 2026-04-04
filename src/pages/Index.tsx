@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { AddProductModal } from "@/components/AddProductModal";
 import { AuthPromptModal } from "@/components/AuthPromptModal";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
+import { QuickGuideModal } from "@/components/QuickGuideModal";
 import { Filters } from "@/components/Filters";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useCountryNames } from "@/hooks/useCountryNames";
+import { extractNumericPrice, ProductSort } from "@/lib/marketplace";
 
 const Index = () => {
   const { user } = useAuth();
@@ -26,6 +28,18 @@ const Index = () => {
   const [selectedCountry] = useState<string>("al");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+
+  const [showGuide, setShowGuide] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem("marketplace-guide-seen")) {
+      setShowGuide(true);
+      localStorage.setItem("marketplace-guide-seen", "1");
+    }
+  }, []);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortBy, setSortBy] = useState<ProductSort>("newest");
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const { data: products = [] } = useProducts();
   const getCountryName = useCountryNames();
@@ -34,7 +48,29 @@ const Index = () => {
     const matchesSearch = product.title?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
     const matchesCountry = !preferredCountry || product.country === preferredCountry;
-    return matchesSearch && matchesCategory && matchesCountry;
+    const matchesStatus = selectedStatus === "all" || product.status === selectedStatus;
+
+    const numericPrice = extractNumericPrice(product.price);
+    const minPriceNumber = minPrice ? Number(minPrice) : null;
+    const maxPriceNumber = maxPrice ? Number(maxPrice) : null;
+    const matchesMinPrice = minPriceNumber === null || minPriceNumber <= 0 || (numericPrice !== null && numericPrice >= minPriceNumber);
+    const matchesMaxPrice = maxPriceNumber === null || maxPriceNumber <= 0 || (numericPrice !== null && numericPrice <= maxPriceNumber);
+
+    return matchesSearch && matchesCategory && matchesCountry && matchesStatus && matchesMinPrice && matchesMaxPrice;
+  }).sort((leftProduct, rightProduct) => {
+    if (sortBy === "oldest") {
+      return new Date(leftProduct.created_at || 0).getTime() - new Date(rightProduct.created_at || 0).getTime();
+    }
+
+    if (sortBy === "price-asc") {
+      return (extractNumericPrice(leftProduct.price) ?? Number.MAX_SAFE_INTEGER) - (extractNumericPrice(rightProduct.price) ?? Number.MAX_SAFE_INTEGER);
+    }
+
+    if (sortBy === "price-desc") {
+      return (extractNumericPrice(rightProduct.price) ?? -1) - (extractNumericPrice(leftProduct.price) ?? -1);
+    }
+
+    return new Date(rightProduct.created_at || 0).getTime() - new Date(leftProduct.created_at || 0).getTime();
   });
 
   const handlePostProduct = () => {
@@ -124,8 +160,23 @@ const Index = () => {
             <div className="lg:sticky lg:top-28">
               <Filters
                 selectedCategory={selectedCategory}
+                selectedStatus={selectedStatus}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                sortBy={sortBy}
                 onCategoryChange={setSelectedCategory}
-                onReset={() => { setSelectedCategory("all"); setSearchQuery(""); }}
+                onStatusChange={setSelectedStatus}
+                onMinPriceChange={setMinPrice}
+                onMaxPriceChange={setMaxPrice}
+                onSortChange={setSortBy}
+                onReset={() => {
+                  setSelectedCategory("all");
+                  setSelectedStatus("all");
+                  setSearchQuery("");
+                  setMinPrice("");
+                  setMaxPrice("");
+                  setSortBy("newest");
+                }}
               />
             </div>
           </aside>
@@ -150,8 +201,23 @@ const Index = () => {
                   <div className="p-4">
                     <Filters
                       selectedCategory={selectedCategory}
+                      selectedStatus={selectedStatus}
+                      minPrice={minPrice}
+                      maxPrice={maxPrice}
+                      sortBy={sortBy}
                       onCategoryChange={setSelectedCategory}
-                      onReset={() => { setSelectedCategory("all"); setSearchQuery(""); }}
+                      onStatusChange={setSelectedStatus}
+                      onMinPriceChange={setMinPrice}
+                      onMaxPriceChange={setMaxPrice}
+                      onSortChange={setSortBy}
+                      onReset={() => {
+                        setSelectedCategory("all");
+                        setSelectedStatus("all");
+                        setSearchQuery("");
+                        setMinPrice("");
+                        setMaxPrice("");
+                        setSortBy("newest");
+                      }}
                     />
                   </div>
                 </SheetContent>
@@ -191,6 +257,7 @@ const Index = () => {
                       reviewCount={0}
                       userId={product.user_id || undefined}
                       mediaUrls={Array.isArray(product.media_urls) ? (product.media_urls as string[]) : undefined}
+                      status={product.status || undefined}
                       onClick={() => setSelectedProduct(product)}
                     />
                   </div>
@@ -212,6 +279,8 @@ const Index = () => {
         } : null}
         countryName={selectedProduct?.country ? getCountryName(selectedProduct.country) : undefined}
       />
+
+      <QuickGuideModal open={showGuide} onClose={() => setShowGuide(false)} />
     </div>
   );
 };

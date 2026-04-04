@@ -154,3 +154,89 @@
     background-image: var(--gradient-mesh);
   }
 }
+
+/* ─── Color themes ──────────────────────────────────────────── */
+[data-color-theme="blue"] {
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 217 91% 60%;
+  --gradient-primary: linear-gradient(135deg, hsl(210 95% 55%) 0%, hsl(225 90% 60%) 50%, hsl(245 85% 65%) 100%);
+  --shadow-button: 0 4px 14px hsl(217 91% 60% / 0.35);
+  --shadow-glow: 0 0 80px hsl(217 91% 65% / 0.2);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(210 100% 95%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(245 100% 95%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(190 100% 95%) 0px, transparent 50%);
+}
+.dark[data-color-theme="blue"] {
+  --primary: 217 91% 68%;
+  --ring: 217 91% 68%;
+  --gradient-primary: linear-gradient(135deg, hsl(210 95% 65%) 0%, hsl(225 90% 70%) 50%, hsl(245 85% 70%) 100%);
+  --shadow-button: 0 4px 14px hsl(217 91% 68% / 0.4);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(210 50% 15%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(245 50% 15%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(190 50% 15%) 0px, transparent 50%);
+}
+
+[data-color-theme="green"] {
+  --primary: 160 84% 39%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 160 84% 39%;
+  --gradient-primary: linear-gradient(135deg, hsl(150 90% 40%) 0%, hsl(165 85% 42%) 50%, hsl(180 80% 38%) 100%);
+  --shadow-button: 0 4px 14px hsl(160 84% 39% / 0.35);
+  --shadow-glow: 0 0 80px hsl(160 84% 50% / 0.2);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(155 100% 93%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(175 100% 93%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(60 100% 93%) 0px, transparent 50%);
+}
+.dark[data-color-theme="green"] {
+  --primary: 160 84% 50%;
+  --ring: 160 84% 50%;
+  --gradient-primary: linear-gradient(135deg, hsl(150 90% 50%) 0%, hsl(165 85% 52%) 50%, hsl(180 80% 48%) 100%);
+  --shadow-button: 0 4px 14px hsl(160 84% 50% / 0.4);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(155 50% 15%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(175 50% 15%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(60 50% 15%) 0px, transparent 50%);
+}
+
+[data-color-theme="orange"] {
+  --primary: 30 95% 50%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 30 95% 50%;
+  --gradient-primary: linear-gradient(135deg, hsl(20 100% 53%) 0%, hsl(35 95% 50%) 50%, hsl(50 90% 45%) 100%);
+  --shadow-button: 0 4px 14px hsl(30 95% 50% / 0.35);
+  --shadow-glow: 0 0 80px hsl(30 100% 60% / 0.2);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(30 100% 95%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(50 100% 95%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(10 100% 95%) 0px, transparent 50%);
+}
+.dark[data-color-theme="orange"] {
+  --primary: 30 95% 62%;
+  --ring: 30 95% 62%;
+  --gradient-primary: linear-gradient(135deg, hsl(20 100% 62%) 0%, hsl(35 95% 60%) 50%, hsl(50 90% 55%) 100%);
+  --shadow-button: 0 4px 14px hsl(30 95% 62% / 0.4);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(30 50% 15%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(50 50% 15%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(10 50% 15%) 0px, transparent 50%);
+}
+
+[data-color-theme="rose"] {
+  --primary: 346 87% 60%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 346 87% 60%;
+  --gradient-primary: linear-gradient(135deg, hsl(340 90% 58%) 0%, hsl(350 88% 62%) 50%, hsl(5 85% 60%) 100%);
+  --shadow-button: 0 4px 14px hsl(346 87% 60% / 0.35);
+  --shadow-glow: 0 0 80px hsl(346 87% 65% / 0.2);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(345 100% 95%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(5 100% 95%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(320 100% 95%) 0px, transparent 50%);
+}
+.dark[data-color-theme="rose"] {
+  --primary: 346 87% 68%;
+  --ring: 346 87% 68%;
+  --gradient-primary: linear-gradient(135deg, hsl(340 90% 68%) 0%, hsl(350 88% 70%) 50%, hsl(5 85% 68%) 100%);
+  --shadow-button: 0 4px 14px hsl(346 87% 68% / 0.4);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(345 50% 15%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(5 50% 15%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(320 50% 15%) 0px, transparent 50%);
+}
+
+[data-color-theme="teal"] {
+  --primary: 186 85% 40%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 186 85% 40%;
+  --gradient-primary: linear-gradient(135deg, hsl(180 90% 38%) 0%, hsl(190 85% 42%) 50%, hsl(200 80% 45%) 100%);
+  --shadow-button: 0 4px 14px hsl(186 85% 40% / 0.35);
+  --shadow-glow: 0 0 80px hsl(186 85% 50% / 0.2);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(185 100% 93%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(200 100% 93%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(160 100% 93%) 0px, transparent 50%);
+}
+.dark[data-color-theme="teal"] {
+  --primary: 186 85% 52%;
+  --ring: 186 85% 52%;
+  --gradient-primary: linear-gradient(135deg, hsl(180 90% 50%) 0%, hsl(190 85% 54%) 50%, hsl(200 80% 55%) 100%);
+  --shadow-button: 0 4px 14px hsl(186 85% 52% / 0.4);
+  --gradient-mesh: radial-gradient(at 40% 20%, hsl(185 50% 15%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(200 50% 15%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(160 50% 15%) 0px, transparent 50%);
+}

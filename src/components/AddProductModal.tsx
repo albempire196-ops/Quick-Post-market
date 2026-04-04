@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { X, Image, Video } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { X, Image, Video, Minus, ChevronUp, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -43,6 +43,70 @@ const MAX_FILES = 10;
 const MAX_VIDEOS = 2;
 const MIN_VIDEO_DURATION = 15; // seconds
 
+const getProductPostErrorMessage = (err: unknown) => {
+  const message = (() => {
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    if (err && typeof err === "object") {
+      const maybeError = err as {
+        message?: string;
+        error_description?: string;
+        details?: string;
+        hint?: string;
+        code?: string;
+      };
+
+      return (
+        maybeError.message ||
+        maybeError.error_description ||
+        maybeError.details ||
+        maybeError.hint ||
+        maybeError.code ||
+        JSON.stringify(err)
+      );
+    }
+
+    return String(err ?? "");
+  })();
+  const normalizedMessage = message.toLowerCase();
+
+  if (normalizedMessage.includes("bucket") || normalizedMessage.includes("product-media")) {
+    return "Supabase storage bucket 'product-media' mungon ose nuk ka leje upload.";
+  }
+
+  if (
+    normalizedMessage.includes("relation \"products\" does not exist") ||
+    normalizedMessage.includes("relation 'products' does not exist") ||
+    normalizedMessage.includes("table \"products\" does not exist")
+  ) {
+    return "Tabela e produkteve nuk ekziston ose migrimet e Supabase nuk janë aplikuar.";
+  }
+
+  if (
+    normalizedMessage.includes("schema cache") ||
+    normalizedMessage.includes("column") ||
+    normalizedMessage.includes("status") ||
+    normalizedMessage.includes("media_urls") ||
+    normalizedMessage.includes("contact")
+  ) {
+    return `Skema e tabeles products nuk perputhet me app-in. Gabimi: ${message}`;
+  }
+
+  if (normalizedMessage.includes("products_public")) {
+    return `The products_public view is missing or not updated. Error: ${message}`;
+  }
+
+  if (normalizedMessage.includes("row-level security") || normalizedMessage.includes("policy")) {
+    return "Supabase RLS policy is blocking the product post.";
+  }
+
+  if (normalizedMessage.includes("jwt") || normalizedMessage.includes("auth") || normalizedMessage.includes("permission")) {
+    return "You must be signed in and Supabase must have the correct permissions to post.";
+  }
+
+  return message || "Something went wrong. Please try again.";
+};
+
 export const AddProductModal = ({ open, onClose, country }: AddProductModalProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -57,6 +121,13 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
   const [previews, setPreviews] = useState<string[]>([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const [minimized, setMinimized] = useState(false);
+
+  // Reset minimized when modal is freshly opened
+  useEffect(() => {
+    if (open) setMinimized(false);
+  }, [open]);
 
   const videoCount = files.filter(f => f.type.startsWith("video/")).length;
 
@@ -81,31 +152,31 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
     let currentVideos = videoCount;
 
     for (const file of selected) {
-      if (files.length + newFiles.length >= MAX_FILES) {
-        toast.error(`Maksimumi ${MAX_FILES} skedarë`);
-        break;
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error(`${file.name} është shumë i madh (max 2GB)`);
-        continue;
-      }
-      if (file.type.startsWith("video/")) {
-        if (currentVideos >= MAX_VIDEOS) {
-          toast.error(`Maksimumi ${MAX_VIDEOS} video`);
+        if (files.length + newFiles.length >= MAX_FILES) {
+          toast.error(`Maximum ${MAX_FILES} files`);
+          break;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+          toast.error(`${file.name} is too large (max 2GB)`);
           continue;
         }
-        try {
-          const duration = await getVideoDuration(file);
-          if (duration < MIN_VIDEO_DURATION) {
-            toast.error(`${file.name} është shumë e shkurtër (min ${MIN_VIDEO_DURATION} sekonda)`);
+        if (file.type.startsWith("video/")) {
+          if (currentVideos >= MAX_VIDEOS) {
+            toast.error(`Maximum ${MAX_VIDEOS} videos`);
             continue;
           }
-        } catch {
-          toast.error(`Nuk mund të lexohet video: ${file.name}`);
-          continue;
+          try {
+            const duration = await getVideoDuration(file);
+            if (duration < MIN_VIDEO_DURATION) {
+              toast.error(`${file.name} is too short (min ${MIN_VIDEO_DURATION} seconds)`);
+              continue;
+            }
+          } catch {
+            toast.error(`Cannot read video: ${file.name}`);
+            continue;
+          }
+          currentVideos++;
         }
-        currentVideos++;
-      }
       newFiles.push(file);
     }
 
@@ -125,12 +196,12 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
   };
 
   const productSchema = z.object({
-    title: z.string().trim().min(1, "Titulli kërkohet").max(200),
-    price: z.string().trim().min(1, "Çmimi kërkohet").max(100),
-    description: z.string().trim().min(1, "Përshkrimi kërkohet").max(5000),
-    category: z.string().min(1, "Kategoria kërkohet"),
-    contact: z.string().trim().min(1, "Kontakti kërkohet").max(200),
-    country: z.string().min(1, "Vendi kërkohet"),
+    title: z.string().trim().min(1, "Title is required").max(200),
+    price: z.string().trim().min(1, "Price is required").max(100),
+    description: z.string().trim().min(1, "Description is required").max(5000),
+    category: z.string().min(1, "Category is required"),
+    contact: z.string().trim().min(1, "Contact is required").max(200),
+    country: z.string().min(1, "Country is required"),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -146,12 +217,12 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
     }
 
     if (files.length === 0) {
-      toast.error("Duhet të ngarkoni të paktën një foto ose video");
+      toast.error("You must upload at least one photo or video");
       return;
     }
 
     if (!user) {
-      toast.error("Duhet të identifikoheni për të postuar");
+      toast.error("You must be signed in to post");
       return;
     }
 
@@ -182,6 +253,7 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
         category: parsed.data.category.toLowerCase(),
         contact: parsed.data.contact,
         country: parsed.data.country,
+        status: "available",
         user_id: user.id,
         image_url: mediaUrls[0], // first as thumbnail
         media_urls: mediaUrls,
@@ -190,46 +262,59 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
       if (error) throw error;
 
       setUploadProgress(100);
-      toast.success("Produkti u postua me sukses!");
+      toast.success("Product posted successfully!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
       onClose();
       setTitle(""); setPrice(""); setDescription(""); setCategory("");
       setContact(""); setSelectedCountry("");
       previews.forEach(p => URL.revokeObjectURL(p));
-      setFiles([]); setPreviews([]); setUploadProgress(0);
+      setFiles([]); setPreviews([]); setUploadProgress(0); setMinimized(false);
     } catch (err) {
       console.error("Error posting product:", err);
-      toast.error("Diçka shkoi keq. Provoni përsëri.");
+      toast.error(getProductPostErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <>
+    <Dialog open={open && !minimized} onOpenChange={(isOpen) => { if (!isOpen) { if (submitting) setMinimized(true); else onClose(); } }}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Posto Produkt të Ri</DialogTitle>
+          <div className="flex items-center justify-between pr-8">
+            <DialogTitle className="text-2xl">Post New Product</DialogTitle>
+            {submitting && (
+              <button
+                type="button"
+                title="Minimize – upload continues in background"
+                onClick={() => setMinimized(true)}
+                className="w-7 h-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+              >
+                <Minus className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
+          </div>
           <DialogDescription>
-            Plotësoni detajet e produktit për ta publikuar menjëherë
+            Fill in the product details to publish it immediately
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titulli i Produktit*</Label>
-            <Input id="title" placeholder="p.sh. iPhone 14 Pro në gjendje të shkëlqyer" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Label htmlFor="title">Product Title*</Label>
+            <Input id="title" placeholder="e.g. iPhone 14 Pro in excellent condition" value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">Çmimi*</Label>
-              <Input id="price" type="text" placeholder="p.sh. $50, Falas, I negociueshëm" value={price} onChange={(e) => setPrice(e.target.value)} maxLength={100} />
+              <Label htmlFor="price">Price*</Label>
+              <Input id="price" type="text" placeholder="e.g. $50, Free, Negotiable" value={price} onChange={(e) => setPrice(e.target.value)} maxLength={100} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Kategoria*</Label>
+              <Label htmlFor="category">Category*</Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger id="category"><SelectValue placeholder="Zgjidhni kategorinë" /></SelectTrigger>
+                <SelectTrigger id="category"><SelectValue placeholder="Select category" /></SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (<SelectItem key={cat} value={cat}>{cat}</SelectItem>))}
                 </SelectContent>
@@ -238,9 +323,9 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="country">Vendi*</Label>
+            <Label htmlFor="country">Country*</Label>
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger id="country"><SelectValue placeholder="Zgjidhni vendin" /></SelectTrigger>
+              <SelectTrigger id="country"><SelectValue placeholder="Select country" /></SelectTrigger>
               <SelectContent className="max-h-60">
                 {countries.map((c) => (
                   <SelectItem key={c.code} value={c.code}>
@@ -252,18 +337,18 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Përshkrimi*</Label>
-            <Textarea id="description" placeholder="Përshkruani produktin tuaj..." rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+            <Label htmlFor="description">Description*</Label>
+            <Textarea id="description" placeholder="Describe your product..." rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contact">Kontakti* (telefon ose email)</Label>
-            <Input id="contact" placeholder="p.sh. +355 69 123 4567 ose email@shembull.com" value={contact} onChange={(e) => setContact(e.target.value)} />
+            <Label htmlFor="contact">Contact* (phone or email)</Label>
+            <Input id="contact" placeholder="e.g. +1 555 123 4567 or email@example.com" value={contact} onChange={(e) => setContact(e.target.value)} />
           </div>
 
           {/* Multi-file Upload */}
           <div className="space-y-2">
-            <Label>Foto ose Video* <span className="text-xs text-muted-foreground">(max {MAX_FILES} skedarë, max {MAX_VIDEOS} video)</span></Label>
+            <Label>Photos or Videos* <span className="text-xs text-muted-foreground">(max {MAX_FILES} files, max {MAX_VIDEOS} videos)</span></Label>
 
             {files.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -293,7 +378,7 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
                     className="border-2 border-dashed border-border rounded-lg aspect-square flex flex-col items-center justify-center hover:border-primary transition-colors cursor-pointer"
                   >
                     <Image className="w-6 h-6 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground mt-1">Shto</span>
+                    <span className="text-xs text-muted-foreground mt-1">Add</span>
                   </div>
                 )}
               </div>
@@ -308,7 +393,7 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
                   <Image className="w-8 h-8 text-muted-foreground" />
                   <Video className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground">Klikoni për të ngarkuar foto ose video</p>
+                <p className="text-sm text-muted-foreground">Click to upload photos or videos</p>
                 <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP, GIF, MP4, WebM (max 2GB)</p>
               </div>
             )}
@@ -319,13 +404,35 @@ export const AddProductModal = ({ open, onClose, country }: AddProductModalProps
           {submitting && uploadProgress > 0 && <Progress value={uploadProgress} className="h-2" />}
 
           <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">Anulo</Button>
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">Cancel</Button>
             <Button type="submit" variant="accent" className="flex-1" disabled={submitting}>
-              {submitting ? "Duke ngarkuar..." : "Publiko Produktin"}
+              {submitting ? "Uploading..." : "Publish Product"}
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
+
+    {/* Floating badge when minimized during upload */}
+    {minimized && submitting && (
+      <div className="fixed bottom-6 right-6 z-[200] bg-card border border-border rounded-2xl shadow-card p-4 w-72 space-y-3 animate-in slide-in-from-bottom-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            <span className="text-sm font-medium">Uploading product…</span>
+          </div>
+          <button
+            onClick={() => setMinimized(false)}
+            className="w-7 h-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+            title="Expand"
+          >
+            <ChevronUp className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
+        <Progress value={uploadProgress} className="h-1.5" />
+        <p className="text-xs text-muted-foreground">{uploadProgress}% complete</p>
+      </div>
+    )}
+    </>
   );
 };

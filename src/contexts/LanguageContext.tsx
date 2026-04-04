@@ -15,22 +15,18 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
-  const [language, setLanguageState] = useState(() => localStorage.getItem("preferred_language") || "en");
+  const language = "en";
   const [preferredCountry, setPreferredCountryState] = useState<string | null>(() => localStorage.getItem("preferred_country") || null);
 
-  // Load preferences from DB when user logs in
+  // Load preferred country from DB when user logs in
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("preferred_language, preferred_country")
+      .select("preferred_country")
       .eq("id", user.id)
       .single()
       .then(({ data }) => {
-        if (data?.preferred_language) {
-          setLanguageState(data.preferred_language);
-          localStorage.setItem("preferred_language", data.preferred_language);
-        }
         if (data?.preferred_country !== undefined) {
           setPreferredCountryState(data.preferred_country);
           if (data.preferred_country) {
@@ -42,13 +38,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       });
   }, [user]);
 
-  const setLanguage = async (lang: string) => {
-    setLanguageState(lang);
-    localStorage.setItem("preferred_language", lang);
-    if (user) {
-      await supabase.from("profiles").update({ preferred_language: lang } as any).eq("id", user.id);
-    }
-  };
+  const setLanguage = () => {};
 
   const setPreferredCountry = async (country: string | null) => {
     setPreferredCountryState(country);

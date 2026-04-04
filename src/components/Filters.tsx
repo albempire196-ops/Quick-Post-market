@@ -1,11 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Grid3X3, Smartphone, Shirt, Home, Car, Palette, Music, Dumbbell, BookOpen, Sparkles } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RotateCcw, Grid3X3, Smartphone, Shirt, Home, Car, Palette, Dumbbell, BookOpen, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { TranslationKey } from "@/i18n/translations";
+import { ProductSort } from "@/lib/marketplace";
 
 interface FiltersProps {
   selectedCategory: string;
+  selectedStatus: string;
+  minPrice: string;
+  maxPrice: string;
+  sortBy: ProductSort;
   onCategoryChange: (category: string) => void;
+  onStatusChange: (status: string) => void;
+  onMinPriceChange: (value: string) => void;
+  onMaxPriceChange: (value: string) => void;
+  onSortChange: (sort: ProductSort) => void;
   onReset: () => void;
 }
 
@@ -17,13 +28,26 @@ const categories: { id: string; nameKey: TranslationKey; icon: any }[] = [
   { id: "furniture", nameKey: "furniture", icon: Home },
   { id: "vehicles", nameKey: "vehicles", icon: Car },
   { id: "art", nameKey: "art_crafts", icon: Palette },
-  { id: "music", nameKey: "music", icon: Music },
   { id: "sports", nameKey: "sports", icon: Dumbbell },
   { id: "books", nameKey: "books", icon: BookOpen },
   { id: "other", nameKey: "other", icon: Sparkles },
 ];
 
-export const Filters = ({ selectedCategory, onCategoryChange, onReset }: FiltersProps) => {
+const statuses = ["all", "available", "reserved", "sold"];
+
+export const Filters = ({
+  selectedCategory,
+  selectedStatus,
+  minPrice,
+  maxPrice,
+  sortBy,
+  onCategoryChange,
+  onStatusChange,
+  onMinPriceChange,
+  onMaxPriceChange,
+  onSortChange,
+  onReset,
+}: FiltersProps) => {
   const { t } = useLanguage();
 
   return (
@@ -56,6 +80,63 @@ export const Filters = ({ selectedCategory, onCategoryChange, onReset }: Filters
             );
           })}
         </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-muted-foreground">Status</p>
+        <div className="grid grid-cols-2 gap-2">
+          {statuses.map((status) => {
+            const isSelected = selectedStatus === status;
+            return (
+              <button
+                key={status}
+                onClick={() => onStatusChange(status)}
+                className={`px-3 py-2 rounded-xl text-sm transition-all ${
+                  isSelected
+                    ? "bg-gradient-primary text-primary-foreground shadow-button"
+                    : "bg-secondary/50 hover:bg-secondary/80"
+                }`}
+              >
+                {status === "all" ? "All" : status.charAt(0).toUpperCase() + status.slice(1)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-muted-foreground">Price range</p>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            value={minPrice}
+            onChange={(event) => onMinPriceChange(event.target.value)}
+            inputMode="decimal"
+            placeholder="Min"
+            className="bg-secondary/50 border-0 rounded-xl"
+          />
+          <Input
+            value={maxPrice}
+            onChange={(event) => onMaxPriceChange(event.target.value)}
+            inputMode="decimal"
+            placeholder="Max"
+            className="bg-secondary/50 border-0 rounded-xl"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-muted-foreground">Sort by</p>
+        <Select value={sortBy} onValueChange={(value) => onSortChange(value as ProductSort)}>
+          <SelectTrigger className="bg-secondary/50 border-0 rounded-xl">
+            <SelectValue placeholder="Sort products" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest first</SelectItem>
+            <SelectItem value="oldest">Oldest first</SelectItem>
+            <SelectItem value="price-asc">Price: low to high</SelectItem>
+            <SelectItem value="price-desc">Price: high to low</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
