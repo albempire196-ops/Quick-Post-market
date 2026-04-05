@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,21 +10,38 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Briefcase, Pencil, Trash2, Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { countries } from "@/data/countries";
 
 const Jobs = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialCountry = searchParams.get("country") || "";
+  const [selectedCountry, setSelectedCountry] = useState(initialCountry);
+
   const { data, error, isLoading } = useQuery({
-    queryKey: ["jobs"],
+    queryKey: ["jobs", selectedCountry],
     queryFn: async () => {
-      const { data: products, error: queryError } = await supabase
+      let q = supabase
         .from("products_public")
-        .select("id, user_id, title, description, price, image_url, media_urls, contact, created_at")
+        .select("id, user_id, title, description, price, image_url, media_urls, contact, country, created_at")
         .in("category", ["workers", "jobs", "services"])
         .order("created_at", { ascending: false });
 
+      if (selectedCountry) {
+        q = q.eq("country", selectedCountry);
+      }
+
+      const { data: products, error: queryError } = await q;
       if (queryError) throw queryError;
       return products || [];
     },
@@ -33,6 +50,14 @@ const Jobs = () => {
   useEffect(() => {
     if (error) console.error("Jobs query error:", error);
   }, [error]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      setSearchParams({ country: selectedCountry });
+    } else {
+      setSearchParams({});
+    }
+  }, [selectedCountry]);
 
   // Edit state
   const [editItem, setEditItem] = useState<any | null>(null);
@@ -100,6 +125,24 @@ const Jobs = () => {
               <Briefcase className="w-6 h-6" /> Jobs — Workers Needed
             </h1>
             <p className="text-sm text-muted-foreground">{data?.length ?? 0} listings</p>
+          </div>
+        </div>
+
+        {/* Country filter */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-muted-foreground mb-2">Filter by country</label>
+          <div className="max-w-sm">
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger><SelectValue placeholder="All countries" /></SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectItem value="">All countries</SelectItem>
+                {countries.map((c) => (
+                  <SelectItem key={c.code} value={c.code}>
+                    <span className="flex items-center gap-2"><span>{c.flag}</span><span>{c.name}</span></span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

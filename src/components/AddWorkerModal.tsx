@@ -10,6 +10,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Image, X, Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { countries } from "@/data/countries";
 
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -27,6 +35,7 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
   const [description, setDescription] = useState("");
   const [wage, setWage] = useState("");
   const [contact, setContact] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -102,6 +111,7 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
         description: description.trim() || null,
         price: wage.trim() || null,
         contact: contact.trim() || null,
+        country: selectedCountry || null,
         category: "workers",
         status: "available",
         user_id: user.id,
@@ -120,6 +130,7 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
       setDescription("");
       setWage("");
       setContact("");
+      setSelectedCountry("");
       previews.forEach(p => URL.revokeObjectURL(p));
       setFiles([]);
       setPreviews([]);
@@ -160,6 +171,22 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
           <div>
             <Label>Contact</Label>
             <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Phone number or email" />
+          </div>
+
+          <div>
+            <Label>Country</Label>
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
+              <SelectContent className="max-h-60">
+                {countries.map((c) => (
+                  <SelectItem key={c.code} value={c.code}>
+                    <span className="flex items-center gap-2">
+                      <span>{c.flag}</span><span>{c.name}</span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Photo Upload */}
