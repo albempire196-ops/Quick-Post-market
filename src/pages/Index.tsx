@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { AddProductModal } from "@/components/AddProductModal";
+import AddWorkerModal from "@/components/AddWorkerModal";
 import { AuthPromptModal } from "@/components/AuthPromptModal";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
 import { QuickGuideModal } from "@/components/QuickGuideModal";
