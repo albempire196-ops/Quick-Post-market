@@ -8,32 +8,22 @@ const Workers = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["workers"],
     queryFn: async () => {
-      // Try workers table first
-      const { data: workers, error: workersError } = await supabase
-        .from("workers")
-        .select("id, business_name, description, wage, contact, created_at")
-        .order("created_at", { ascending: false });
-
-      if (!workersError && workers && workers.length > 0) return workers;
-
-      // Fallback to products_public entries labeled as 'workers' in category
-      const { data: products } = await supabase
+      const { data: products, error: queryError } = await supabase
         .from("products_public")
         .select("id, title, description, price, created_at")
-        .in("category", ["workers", "services"]);
+        .in("category", ["workers", "jobs", "services"])
+        .order("created_at", { ascending: false });
 
-      if (products) {
-        return products.map((p: any) => ({
-          id: p.id,
-          business_name: p.title,
-          description: p.description,
-          wage: p.price,
-          contact: null,
-          created_at: p.created_at,
-        }));
-      }
+      if (queryError) throw queryError;
 
-      return [];
+      return (products || []).map((p: any) => ({
+        id: p.id,
+        business_name: p.title,
+        description: p.description,
+        wage: p.price,
+        contact: null,
+        created_at: p.created_at,
+      }));
     },
   });
 

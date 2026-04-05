@@ -31,7 +31,6 @@ const en = {
   furniture: "Furniture",
   vehicles: "Vehicles",
   art_crafts: "Art & Crafts",
-  music: "Music",
   sports: "Sports",
   books: "Books",
   other: "Other",
