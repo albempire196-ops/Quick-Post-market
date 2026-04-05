@@ -11,7 +11,7 @@ const AuthCallback = () => {
       if (event === 'SIGNED_IN' && session) {
         toast.success("Logged in successfully!");
         subscription.unsubscribe();
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     });
 

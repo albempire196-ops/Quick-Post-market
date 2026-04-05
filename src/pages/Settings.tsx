@@ -135,11 +135,13 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="fixed inset-0 mesh-gradient opacity-60 pointer-events-none" />
+      <div className="fixed inset-0 mesh-gradient opacity-80 pointer-events-none" />
+      <div className="fixed top-1/3 right-1/4 w-[500px] h-[500px] bg-primary/12 rounded-full blur-[140px] pointer-events-none animate-float-slow" />
+      <div className="fixed bottom-1/4 left-1/3 w-[400px] h-[400px] bg-accent/8 rounded-full blur-[120px] pointer-events-none animate-float" />
 
-      <header className="sticky top-0 z-50 glass-strong">
+      <header className="sticky top-0 z-50 liquid-glass">
         <div className="container mx-auto px-6 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-xl">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-xl btn-ghost-premium">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex items-center gap-3">
@@ -151,10 +153,10 @@ const Settings = () => {
         </div>
       </header>
 
-      <main className="relative container mx-auto px-6 py-10 max-w-2xl space-y-8">
+      <main className="relative container mx-auto px-6 py-10 max-w-2xl space-y-8 section-aura">
         {/* Profile */}
         {user && (
-          <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in">
+          <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
                 <User className="w-7 h-7 text-primary-foreground" />
@@ -167,7 +169,7 @@ const Settings = () => {
             <Button
               variant="outline"
               onClick={() => navigate(`/seller/${user.id}`)}
-              className="w-full gap-2 h-12 rounded-2xl"
+              className="w-full gap-2 h-12 rounded-2xl btn-secondary-premium"
             >
               <User className="w-5 h-5" />
               View my seller profile
@@ -222,7 +224,7 @@ const Settings = () => {
 
         {/* My Products */}
         {user && (
-          <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.05s" }}>
+          <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.05s" }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
                 <Package className="w-7 h-7 text-primary-foreground" />
@@ -296,7 +298,7 @@ const Settings = () => {
         )}
 
         {user && (
-          <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.08s" }}>
+          <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.08s" }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
                 <Package className="w-7 h-7 text-primary-foreground" />
@@ -341,7 +343,7 @@ const Settings = () => {
         )}
 
         {user && isAdmin && (
-          <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.09s" }}>
+          <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.09s" }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
                 <Sparkles className="w-7 h-7 text-primary-foreground" />
@@ -403,7 +405,7 @@ const Settings = () => {
         )}
 
         {/* Preferred Country */}
-        <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
               <MapPin className="w-7 h-7 text-primary-foreground" />
@@ -454,7 +456,7 @@ const Settings = () => {
         </section>
 
         {/* Appearance */}
-        <section className="glass rounded-3xl p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+        <section className="liquid-glass rounded-[2rem] p-8 space-y-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
               <Moon className="w-7 h-7 text-primary-foreground" />
@@ -515,7 +517,7 @@ const Settings = () => {
         </section>
 
         {/* Quick Guide */}
-        <section className="glass rounded-3xl p-8 space-y-4 animate-fade-in" style={{ animationDelay: "0.35s" }}>
+        <section className="liquid-glass rounded-[2rem] p-8 space-y-4 animate-fade-in" style={{ animationDelay: "0.35s" }}>
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
               <BookOpen className="w-7 h-7 text-primary-foreground" />

@@ -146,38 +146,38 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o && !submitting) onClose(); }}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto rounded-[2rem] liquid-glass border-border/15">
         <DialogHeader>
-          <DialogTitle className="text-xl">Post a Job — Find Worker</DialogTitle>
+          <DialogTitle className="font-display text-xl">Post a Job — Find Worker</DialogTitle>
           <DialogDescription>Fill in the details to find a worker for your business</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
-            <Label>Business Name *</Label>
-            <Input value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="e.g. Restaurant Bella Italia" />
+            <Label className="text-xs font-semibold uppercase tracking-wider">Business Name *</Label>
+            <Input value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="e.g. Restaurant Bella Italia" className="mt-2 h-11 rounded-xl" />
           </div>
 
           <div>
-            <Label>Description</Label>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the job position, requirements..." rows={4} />
+            <Label className="text-xs font-semibold uppercase tracking-wider">Description</Label>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the job position, requirements..." rows={4} className="mt-2 rounded-xl" />
           </div>
 
           <div>
-            <Label>Wage</Label>
-            <Input value={wage} onChange={(e) => setWage(e.target.value)} placeholder="e.g. 500 USD/month or 10 USD/hour" />
+            <Label className="text-xs font-semibold uppercase tracking-wider">Wage</Label>
+            <Input value={wage} onChange={(e) => setWage(e.target.value)} placeholder="e.g. 500 USD/month or 10 USD/hour" className="mt-2 h-11 rounded-xl" />
           </div>
 
           <div>
-            <Label>Contact</Label>
-            <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Phone number or email" />
+            <Label className="text-xs font-semibold uppercase tracking-wider">Contact</Label>
+            <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Phone number or email" className="mt-2 h-11 rounded-xl" />
           </div>
 
           <div>
-            <Label>Country</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider">Country</Label>
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
-              <SelectContent className="max-h-60">
+              <SelectTrigger className="mt-2 h-11 rounded-xl"><SelectValue placeholder="Select country" /></SelectTrigger>
+              <SelectContent className="max-h-60 rounded-2xl">
                 {countries.map((c) => (
                   <SelectItem key={c.code} value={c.code}>
                     <span className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
 
           {/* Photo Upload */}
           <div>
-            <Label>Photos</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider">Photos</Label>
             <input
               ref={fileRef}
               type="file"
@@ -203,7 +203,7 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
             <Button
               type="button"
               variant="outline"
-              className="w-full mt-1 gap-2"
+              className="w-full mt-2 gap-2 rounded-xl h-11"
               onClick={() => fileRef.current?.click()}
               disabled={files.length >= MAX_FILES}
             >
@@ -214,11 +214,11 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
             {previews.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {previews.map((src, i) => (
-                  <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border">
+                  <div key={i} className="relative w-20 h-20 rounded-2xl overflow-hidden border border-border/30">
                     <img src={src} alt="" className="w-full h-full object-cover" />
                     <button
                       onClick={() => removeFile(i)}
-                      className="absolute top-0.5 right-0.5 bg-black/60 rounded-full p-0.5"
+                      className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5 backdrop-blur-sm"
                     >
                       <X className="w-3 h-3 text-white" />
                     </button>
@@ -228,11 +228,11 @@ export const AddWorkerModal = ({ open, onClose }: AddWorkerModalProps) => {
             )}
           </div>
 
-          {submitting && <Progress value={uploadProgress} className="h-2" />}
+          {submitting && <Progress value={uploadProgress} className="h-2 rounded-full" />}
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" onClick={onClose} disabled={submitting}>Cancel</Button>
-            <Button onClick={handleSubmit} disabled={submitting}>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl h-11">Cancel</Button>
+            <Button onClick={handleSubmit} disabled={submitting} className="rounded-xl h-11 btn-premium">
               {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Posting...</> : "Post Job"}
             </Button>
           </div>

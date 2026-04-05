@@ -95,19 +95,20 @@ const SellerProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="fixed inset-0 mesh-gradient opacity-60 pointer-events-none" />
+      <div className="fixed inset-0 mesh-gradient opacity-80 pointer-events-none" />
+      <div className="fixed top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/12 rounded-full blur-[140px] pointer-events-none animate-float-slow" />
 
-      <header className="sticky top-0 z-50 glass-strong">
+      <header className="sticky top-0 z-50 liquid-glass">
         <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-xl">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-xl btn-ghost-premium btn-ghost-premium">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="font-display font-bold text-xl">{isOwnProfile ? "My seller profile" : "Seller profile"}</h1>
         </div>
       </header>
 
-      <main className="relative container mx-auto px-4 sm:px-6 py-8 space-y-8">
-        <section className="glass rounded-3xl p-6 sm:p-8">
+      <main className="relative container mx-auto px-4 sm:px-6 py-8 space-y-8 section-aura section-aura">
+        <section className="liquid-glass card-glow card-glow rounded-[2rem] p-6 sm:p-8">
           {isLoading ? (
             <div className="text-muted-foreground">Loading seller profile...</div>
           ) : data ? (
@@ -124,7 +125,7 @@ const SellerProfile = () => {
                     <span className="ml-2 text-muted-foreground text-sm">{data.profile.email}</span>
                   )}
                   {!isOwnProfile && data.profile?.email && (
-                    <Button size="sm" variant="outline" className="ml-2" onClick={() => window.open(`mailto:${data.profile?.email}`)}>
+                    <Button size="sm" variant="outline" className="ml-2 btn-secondary-premium btn-secondary-premium" onClick={() => window.open(`mailto:${data.profile?.email}`)}>
                       Email seller
                     </Button>
                   )}
@@ -150,7 +151,7 @@ const SellerProfile = () => {
           </div>
 
           {!data?.products?.length ? (
-            <div className="glass rounded-3xl p-8 text-muted-foreground">This seller has no active listings.</div>
+            <div className="liquid-glass rounded-[2rem] p-8 text-muted-foreground">This seller has no active listings.</div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-8">
               {data.products

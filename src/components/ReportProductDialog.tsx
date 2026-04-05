@@ -92,9 +92,9 @@ export const ReportProductDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md rounded-2xl">
+      <DialogContent className="max-w-md rounded-[2rem] liquid-glass border-border/15">
         <DialogHeader>
-          <DialogTitle>Report product</DialogTitle>
+          <DialogTitle className="font-display text-xl">Report product</DialogTitle>
           <DialogDescription>
             Send this listing to the admin review queue.
           </DialogDescription>
@@ -102,12 +102,12 @@ export const ReportProductDialog = ({
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Reason</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider">Reason</Label>
             <Select value={reason} onValueChange={setReason}>
-              <SelectTrigger>
+              <SelectTrigger className="h-11 rounded-xl">
                 <SelectValue placeholder="Select a reason" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-2xl">
                 <SelectItem value="spam">Spam</SelectItem>
                 <SelectItem value="fraud">Fraud</SelectItem>
                 <SelectItem value="duplicate">Duplicate listing</SelectItem>
@@ -118,20 +118,21 @@ export const ReportProductDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Details</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider">Details</Label>
             <Textarea
               value={details}
               onChange={(event) => setDetails(event.target.value)}
               rows={4}
               placeholder="Add context for the admin review..."
+              className="rounded-xl"
             />
           </div>
 
-          <div className="flex gap-3">
-            <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
+          <div className="flex gap-3 pt-2">
+            <Button variant="outline" className="flex-1 rounded-xl h-11" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button className="flex-1" onClick={handleSubmit} disabled={submitting}>
+            <Button className="flex-1 rounded-xl h-11 btn-premium" onClick={handleSubmit} disabled={submitting}>
               {submitting ? "Saving..." : "Submit report"}
             </Button>
           </div>

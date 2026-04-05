@@ -10,6 +10,20 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     historyApiFallback: true,
   },
+  build: {
+    target: "es2020",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          supabase: ["@supabase/supabase-js"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-select", "@radix-ui/react-popover"],
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

@@ -114,27 +114,34 @@ const Jobs = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-4 sm:p-6">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-xl">
+      <div className="fixed inset-0 mesh-gradient opacity-80 pointer-events-none" />
+      <div className="fixed top-1/4 left-1/3 w-[600px] h-[600px] bg-primary/12 rounded-full blur-[150px] pointer-events-none animate-float-slow" />
+
+      {/* Header */}
+      <header className="sticky top-0 z-50 liquid-glass">
+        <div className="container mx-auto px-6 py-4 flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-2xl btn-ghost-premium hover:scale-105 transition-all duration-300">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Briefcase className="w-6 h-6" /> Jobs — Workers Needed
-            </h1>
-            <p className="text-sm text-muted-foreground">{data?.length ?? 0} listings</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-button">
+              <Briefcase className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="font-display font-bold text-xl">Jobs — Workers Needed</h1>
+              <p className="text-sm text-muted-foreground">{data?.length ?? 0} listings</p>
+            </div>
           </div>
         </div>
+      </header>
 
-        {/* Country filter */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-muted-foreground mb-2">Filter by country</label>
+      <main className="relative container mx-auto px-6 py-8 section-aura">
+        <div className="mb-8 animate-fade-in">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Filter by country</label>
           <div className="max-w-sm">
             <Select value={selectedCountry || "__all"} onValueChange={(v) => setSelectedCountry(v === "__all" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="All countries" /></SelectTrigger>
-              <SelectContent className="max-h-60">
+              <SelectTrigger className="h-12 rounded-2xl border-border/50 bg-secondary/30 backdrop-blur-sm"><SelectValue placeholder="All countries" /></SelectTrigger>
+              <SelectContent className="max-h-60 rounded-2xl liquid-glass">
                 <SelectItem value="__all">All countries</SelectItem>
                 {countries.map((c) => (
                   <SelectItem key={c.code} value={c.code}>
@@ -146,43 +153,53 @@ const Jobs = () => {
           </div>
         </div>
 
-        {isLoading && <p className="text-muted-foreground">Loading...</p>}
+        {isLoading && (
+          <div className="flex items-center justify-center py-16">
+            <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          </div>
+        )}
+
         {!isLoading && data && data.length === 0 && (
-          <div className="text-center py-16">
-            <Briefcase className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="text-lg font-medium">No job listings yet</p>
-            <p className="text-sm text-muted-foreground">Click "Find Worker" to post the first one!</p>
+          <div className="liquid-glass rounded-[2rem] text-center py-20 animate-fade-in">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary/50 flex items-center justify-center">
+              <Briefcase className="w-8 h-8 text-muted-foreground/40" />
+            </div>
+            <p className="text-lg font-display font-bold">No job listings yet</p>
+            <p className="text-sm text-muted-foreground mt-1">Click "Find Worker" to post the first one!</p>
           </div>
         )}
 
         {/* Job Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
           {data?.map((job: any) => (
-            <div key={job.id} className="border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition bg-card">
+            <div key={job.id} className="liquid-glass card-glow rounded-[2rem] overflow-hidden group">
               {/* Photo */}
               {job.image_url ? (
-                <img src={job.image_url} alt={job.title} className="w-full h-48 object-cover" />
+                <div className="relative overflow-hidden">
+                  <img src={job.image_url} alt={job.title} className="w-full h-48 object-cover transition-transform duration-700 ease-premium group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
               ) : (
-                <div className="w-full h-32 bg-muted flex items-center justify-center">
-                  <Briefcase className="w-10 h-10 text-muted-foreground/30" />
+                <div className="w-full h-32 bg-secondary/30 flex items-center justify-center">
+                  <Briefcase className="w-10 h-10 text-muted-foreground/20" />
                 </div>
               )}
 
-              <div className="p-4 space-y-2">
-                <h2 className="font-semibold text-lg">{job.title}</h2>
+              <div className="p-5 space-y-3">
+                <h2 className="font-display font-bold text-lg">{job.title}</h2>
                 {job.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-3">{job.description}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">{job.description}</p>
                 )}
-                <p className="font-medium text-primary">Wage: {job.price ?? "—"}</p>
+                <p className="font-semibold text-primary">Wage: {job.price ?? "—"}</p>
                 {job.contact && <p className="text-xs text-muted-foreground">Contact: {job.contact}</p>}
 
                 {/* Edit/Delete for owner */}
                 {user && job.user_id === user.id && (
-                  <div className="flex gap-2 pt-2">
-                    <Button size="sm" variant="outline" className="gap-1" onClick={() => openEdit(job)}>
+                  <div className="flex gap-2 pt-3 border-t border-border/30">
+                    <Button size="sm" variant="outline" className="gap-1.5 rounded-xl" onClick={() => openEdit(job)}>
                       <Pencil className="w-3.5 h-3.5" /> Edit
                     </Button>
-                    <Button size="sm" variant="destructive" className="gap-1" onClick={() => handleDelete(job.id)}>
+                    <Button size="sm" variant="destructive" className="gap-1.5 rounded-xl" onClick={() => handleDelete(job.id)}>
                       <Trash2 className="w-3.5 h-3.5" /> Delete
                     </Button>
                   </div>
@@ -191,35 +208,35 @@ const Jobs = () => {
             </div>
           ))}
         </div>
-      </div>
+      </main>
 
       {/* Edit Dialog */}
       <Dialog open={!!editItem} onOpenChange={(o) => { if (!o) setEditItem(null); }}>
-        <DialogContent className="max-w-md rounded-2xl">
+        <DialogContent className="max-w-md rounded-[2rem] liquid-glass border-border/15">
           <DialogHeader>
-            <DialogTitle>Edit Job Listing</DialogTitle>
+            <DialogTitle className="font-display text-xl">Edit Job Listing</DialogTitle>
             <DialogDescription>Update the details of your job listing</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Business Name</Label>
-              <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+              <Label className="text-xs font-semibold uppercase tracking-wider">Business Name</Label>
+              <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className="mt-2 h-11 rounded-xl" />
             </div>
             <div>
-              <Label>Description</Label>
-              <Textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={4} />
+              <Label className="text-xs font-semibold uppercase tracking-wider">Description</Label>
+              <Textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={4} className="mt-2 rounded-xl" />
             </div>
             <div>
-              <Label>Wage</Label>
-              <Input value={editWage} onChange={(e) => setEditWage(e.target.value)} />
+              <Label className="text-xs font-semibold uppercase tracking-wider">Wage</Label>
+              <Input value={editWage} onChange={(e) => setEditWage(e.target.value)} className="mt-2 h-11 rounded-xl" />
             </div>
             <div>
-              <Label>Contact</Label>
-              <Input value={editContact} onChange={(e) => setEditContact(e.target.value)} />
+              <Label className="text-xs font-semibold uppercase tracking-wider">Contact</Label>
+              <Input value={editContact} onChange={(e) => setEditContact(e.target.value)} className="mt-2 h-11 rounded-xl" />
             </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setEditItem(null)} disabled={saving}>Cancel</Button>
-              <Button onClick={handleSaveEdit} disabled={saving}>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setEditItem(null)} disabled={saving} className="rounded-xl btn-secondary-premium">Cancel</Button>
+              <Button onClick={handleSaveEdit} disabled={saving} className="rounded-xl btn-premium">
                 {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : "Save"}
               </Button>
             </div>

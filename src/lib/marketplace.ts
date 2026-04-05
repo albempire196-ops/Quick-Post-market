@@ -11,9 +11,9 @@ export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
 };
 
 export const PRODUCT_STATUS_STYLES: Record<ProductStatus, string> = {
-  available: "bg-emerald-500/15 text-emerald-700 border-emerald-500/20",
-  reserved: "bg-amber-500/15 text-amber-700 border-amber-500/20",
-  sold: "bg-rose-500/15 text-rose-700 border-rose-500/20",
+  available: "bg-emerald-500/10 text-emerald-600 border-emerald-500/15 dark:text-emerald-400",
+  reserved: "bg-amber-500/10 text-amber-600 border-amber-500/15 dark:text-amber-400",
+  sold: "bg-rose-500/10 text-rose-600 border-rose-500/15 dark:text-rose-400",
 };
 
 export const extractNumericPrice = (value?: string | null) => {

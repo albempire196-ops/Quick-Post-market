@@ -37,8 +37,9 @@ interface EditProductModalProps {
 }
 
 const categories = [
-  "Electronics", "Clothing", "Furniture", "Vehicles",
-  "Home & Garden", "Sports", "Books", "Other",
+  "Hotels & Stays", "House Rental", "House for Sale", "Car Rental",
+  "Vehicles", "Electronics", "Clothing", "Furniture",
+  "Services", "Home & Garden", "Sports", "Books", "Other",
 ];
 
 export const EditProductModal = ({ open, onClose, product }: EditProductModalProps) => {
@@ -100,28 +101,28 @@ export const EditProductModal = ({ open, onClose, product }: EditProductModalPro
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg w-[95vw] sm:w-full p-4 sm:p-6">
+      <DialogContent className="max-w-lg w-[95vw] sm:w-full p-4 sm:p-6 rounded-[2rem] liquid-glass border-border/15">
         <DialogHeader>
-          <DialogTitle className="text-xl">Edit Product</DialogTitle>
+          <DialogTitle className="font-display text-xl">Edit Product</DialogTitle>
           <DialogDescription>Update your product details</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-2">
-            <Label htmlFor="edit-title">Title*</Label>
-            <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Label htmlFor="edit-title" className="text-xs font-semibold uppercase tracking-wider">Title*</Label>
+            <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} className="h-11 rounded-xl" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-price">Price*</Label>
-              <Input id="edit-price" value={price} onChange={(e) => setPrice(e.target.value)} />
+              <Label htmlFor="edit-price" className="text-xs font-semibold uppercase tracking-wider">Price*</Label>
+              <Input id="edit-price" value={price} onChange={(e) => setPrice(e.target.value)} className="h-11 rounded-xl" />
             </div>
             <div className="space-y-2">
-              <Label>Category</Label>
+              <Label className="text-xs font-semibold uppercase tracking-wider">Category</Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="h-11 rounded-xl"><SelectValue /></SelectTrigger>
+                <SelectContent className="rounded-2xl">
                   {categories.map((c) => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
@@ -131,10 +132,10 @@ export const EditProductModal = ({ open, onClose, product }: EditProductModalPro
           </div>
 
           <div className="space-y-2">
-            <Label>Country</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider">Country</Label>
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
-              <SelectContent className="max-h-60">
+              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Select country" /></SelectTrigger>
+              <SelectContent className="max-h-60 rounded-2xl">
                 {countries.map((c) => (
                   <SelectItem key={c.code} value={c.code}>
                     <span className="flex items-center gap-2">
@@ -147,18 +148,18 @@ export const EditProductModal = ({ open, onClose, product }: EditProductModalPro
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="edit-desc">Description</Label>
-            <Textarea id="edit-desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
+            <Label htmlFor="edit-desc" className="text-xs font-semibold uppercase tracking-wider">Description</Label>
+            <Textarea id="edit-desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} className="rounded-xl" />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="edit-contact">Contact</Label>
-            <Input id="edit-contact" value={contact} onChange={(e) => setContact(e.target.value)} />
+            <Label htmlFor="edit-contact" className="text-xs font-semibold uppercase tracking-wider">Contact</Label>
+            <Input id="edit-contact" value={contact} onChange={(e) => setContact(e.target.value)} className="h-11 rounded-xl" />
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">Cancel</Button>
-            <Button type="submit" className="flex-1" disabled={saving}>
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-xl h-11">Cancel</Button>
+            <Button type="submit" className="flex-1 rounded-xl h-11 btn-premium" disabled={saving}>
               {saving ? "Saving..." : "Save Changes"}
             </Button>
           </div>

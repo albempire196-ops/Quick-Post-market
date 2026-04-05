@@ -9,18 +9,29 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { ColorThemeProvider } from "@/contexts/ColorThemeContext";
-import Index from "./pages/Index";
-import Settings from "./pages/Settings";
-import Pricing from "./pages/Pricing";
-import NotFound from "./pages/NotFound";
-import AuthCallback from "./pages/AuthCallback";
-import SellerProfile from "./pages/SellerProfile";
 
+const Index = lazy(() => import("./pages/Index"));
+
+const Settings = lazy(() => import("./pages/Settings"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const SellerProfile = lazy(() => import("./pages/SellerProfile"));
 const Jobs = lazy(() => import("./pages/Jobs"));
 const Workers = lazy(() => import("./pages/Workers"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 import { Navigate } from "react-router-dom";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 2,
+      gcTime: 1000 * 60 * 10,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -33,9 +44,21 @@ const App = () => (
               <Toaster />
               <Sonner />
               <BrowserRouter>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={
+                  <div className="min-h-screen bg-background flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-primary animate-morph flex items-center justify-center shadow-button">
+                        <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      </div>
+                      <div className="w-32 h-1 rounded-full bg-muted overflow-hidden">
+                        <div className="h-full w-1/2 bg-gradient-primary rounded-full animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+                      </div>
+                    </div>
+                  </div>
+                }>
                   <Routes>
                     <Route path="/" element={<Index />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/workers" element={<Workers />} />

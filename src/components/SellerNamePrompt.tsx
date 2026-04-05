@@ -28,12 +28,12 @@ export const SellerNamePrompt = ({ open, initialValue, email, saving, onSubmit }
   return (
     <Dialog open={open}>
       <DialogContent
-        className="max-w-md rounded-3xl"
+        className="max-w-md rounded-[2rem] liquid-glass border-border/15"
         onEscapeKeyDown={(event) => event.preventDefault()}
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Choose your seller name</DialogTitle>
+          <DialogTitle className="font-display text-xl">Choose your seller name</DialogTitle>
           <DialogDescription>
             This name will appear on your seller profile and in listings. {email ? `Signed in as ${email}.` : ""}
           </DialogDescription>
@@ -41,7 +41,7 @@ export const SellerNamePrompt = ({ open, initialValue, email, saving, onSubmit }
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="seller-name">Seller name</Label>
+            <Label htmlFor="seller-name" className="text-xs font-semibold uppercase tracking-wider">Seller name</Label>
             <Input
               id="seller-name"
               value={value}
@@ -49,10 +49,11 @@ export const SellerNamePrompt = ({ open, initialValue, email, saving, onSubmit }
               maxLength={50}
               placeholder="Enter your seller name"
               autoFocus
+              className="h-11 rounded-xl"
             />
           </div>
 
-          <Button className="w-full rounded-xl" disabled={saving || !value.trim()} onClick={() => void handleSubmit()}>
+          <Button className="w-full rounded-xl h-11 btn-premium" disabled={saving || !value.trim()} onClick={() => void handleSubmit()}>
             {saving ? "Saving..." : "Continue"}
           </Button>
         </div>

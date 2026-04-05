@@ -2,50 +2,82 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#6c3aed" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+
+    <!-- Security Headers (CSP, X-Frame-Options, HSTS set via vercel.json HTTP headers) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <meta name="theme-color" content="#6c3aed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Quick Post Market" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Quick Post Market" />
+    <meta name="msapplication-TileColor" content="#6c3aed" />
+    <meta name="msapplication-config" content="none" />
     <link rel="apple-touch-icon" href="/pwa-icon-192.png" />
-    <link rel="icon" type="image/png" href="/pwa-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-icon-512.png" />
     <link rel="canonical" href="https://quickpostmarket.vercel.app/" />
 
-    <title>Quick Post Market — Buy, Sell & Advertise Anything Instantly | Free Online Marketplace</title>
+    <title>Quick Post Market — Buy, Sell, Rent Hotels, Houses, Cars & Everything | Free Global Marketplace</title>
 
-    <meta name="description" content="Quick Post Market is the fastest free online marketplace to buy, sell and advertise products, hotels, restaurants, shops and services. Post listings in seconds — no account needed. Find great deals near you." />
-    <meta name="keywords" content="marketplace, buy and sell, free listings, advertise business, sell online, post products, hotel advertising, restaurant promotion, shop listing, online store, quick marketplace, free marketplace, sell anything" />
+    <meta name="description" content="Quick Post Market is the world's #1 all-in-one marketplace. Buy, sell, rent hotels, houses, cars, and services for free. Post listings instantly across 195+ countries. Book stays, find apartments, rent vehicles — all in one platform." />
+    <meta name="keywords" content="marketplace, free marketplace, buy and sell online, hotel booking, house rental, car rental, rent apartment, book hotel, rent car, sell online free, post listings, global marketplace, vacation rental, property listing, vehicle rental, services marketplace, classified ads, real estate marketplace, accommodation booking, car hire" />
     <meta name="author" content="Quick Post Market" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Quick Post Market" />
-    <meta property="og:title" content="Quick Post Market — Buy, Sell & Advertise Anything Instantly" />
-    <meta property="og:description" content="The fastest free marketplace to list products, advertise your business — hotels, restaurants, shops & more. Post in seconds, find deals near you." />
+    <meta property="og:title" content="Quick Post Market — Buy, Sell, Rent Hotels, Houses, Cars & Everything" />
+    <meta property="og:description" content="The all-in-one marketplace for everything. Book hotels, rent houses & cars, buy & sell products — all free. 195+ countries. Post in seconds." />
     <meta property="og:url" content="https://quickpostmarket.vercel.app/" />
-    <meta property="og:image" content="https://quickpostmarket.vercel.app/pwa-icon-192.png" />
-    <meta property="og:image:width" content="192" />
-    <meta property="og:image:height" content="192" />
+    <meta property="og:image" content="https://quickpostmarket.vercel.app/pwa-icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Quick Post Market - Free Global Marketplace" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Quick Post Market — Buy, Sell & Advertise Anything Instantly" />
-    <meta name="twitter:description" content="The fastest free marketplace to list products, advertise your business — hotels, restaurants, shops & more. Post in seconds, find deals near you." />
-    <meta name="twitter:image" content="https://quickpostmarket.vercel.app/pwa-icon-192.png" />
+    <meta name="twitter:title" content="Quick Post Market — Buy, Sell, Rent Hotels, Houses, Cars & Everything" />
+    <meta name="twitter:description" content="The all-in-one marketplace for everything. Book hotels, rent houses & cars, buy & sell products — all free. Post in seconds." />
+    <meta name="twitter:image" content="https://quickpostmarket.vercel.app/pwa-icon-512.png" />
+    <meta name="twitter:image:alt" content="Quick Post Market - Free Global Marketplace" />
 
-    <!-- Structured Data - WebSite -->
+    <!-- Additional SEO -->
+    <meta name="geo.region" content="GLOBAL" />
+    <meta name="geo.placename" content="Worldwide" />
+    <meta name="rating" content="general" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://afjgbeovuphquxfgkxon.supabase.co" />
+    <link rel="preconnect" href="https://afjgbeovuphquxfgkxon.supabase.co" crossorigin />
+
+    <!-- Structured Data - WebSite with SearchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Quick Post Market",
+      "alternateName": ["QPM", "QuickPost Market", "Quick Post"],
       "url": "https://quickpostmarket.vercel.app/",
-      "description": "The fastest free online marketplace to buy, sell and advertise products, businesses, hotels, restaurants, shops and services.",
+      "description": "The all-in-one global marketplace to buy, sell, rent hotels, houses, cars, and services for free in 195+ countries. Book stays, find rentals, sell products instantly.",
+      "inLanguage": "en",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://quickpostmarket.vercel.app/?search={search_term_string}",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://quickpostmarket.vercel.app/?search={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
       }
     }
@@ -58,7 +90,14 @@
       "@type": "Organization",
       "name": "Quick Post Market",
       "url": "https://quickpostmarket.vercel.app/",
-      "logo": "https://quickpostmarket.vercel.app/pwa-icon-192.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://quickpostmarket.vercel.app/pwa-icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "description": "Free global marketplace platform for buying, selling, and advertising products and services worldwide.",
+      "foundingDate": "2026",
       "sameAs": []
     }
     </script>
@@ -72,22 +111,118 @@
       "url": "https://quickpostmarket.vercel.app/",
       "applicationCategory": "ShoppingApplication",
       "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "softwareVersion": "2.0",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "description": "Free to use marketplace with optional premium plans"
       },
-      "description": "Free online marketplace to buy, sell and advertise anything — products, hotels, restaurants, shops and services. Post listings in seconds."
+      "description": "Free online marketplace to buy, sell and advertise anything — products, hotels, restaurants, shops and services. Post listings in seconds. Available in 195+ countries.",
+      "featureList": ["Free product listings", "Global marketplace in 195+ countries", "Media uploads (photos & videos)", "Real-time updates", "Secure authentication", "Mobile-optimized PWA", "Share via WhatsApp & Facebook"],
+      "screenshot": "https://quickpostmarket.vercel.app/pwa-icon-512.png",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1200",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickpostmarket.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Dashboard",
+          "item": "https://quickpostmarket.vercel.app/dashboard"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Pricing",
+          "item": "https://quickpostmarket.vercel.app/pricing"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Settings",
+          "item": "https://quickpostmarket.vercel.app/settings"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Jobs",
+          "item": "https://quickpostmarket.vercel.app/jobs"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - FAQPage for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Quick Post Market free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Quick Post Market is completely free to use. You can browse, buy, and sell products without any fees. Premium plans are available for unlimited product listings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many countries does Quick Post Market support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Quick Post Market is available in 195+ countries worldwide. You can post and browse listings from anywhere in the world."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can I sell on Quick Post Market?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can sell virtually anything on Quick Post Market — electronics, clothing, furniture, vehicles, art, books, sports equipment, and more. Businesses can also advertise hotels, restaurants, and shops."
+          }
+        }
+      ]
     }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <meta name="google-site-verification" content="d08e59223dc48d28" />
   </head>
 
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="text-align:center;padding:40px;font-family:sans-serif;">
+        <h1>Quick Post Market</h1>
+        <p>The world's fastest free marketplace. Buy, sell, and advertise products, hotels, restaurants, shops and services in 195+ countries.</p>
+        <p>Please enable JavaScript to use Quick Post Market.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -25,7 +25,7 @@ export const CountrySelectModal = ({ open, onSelectCountry }: CountrySelectModal
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden rounded-3xl [&>button]:hidden">
+      <DialogContent className="max-w-lg p-0 overflow-hidden rounded-[2rem] [&>button]:hidden">
         <div className="bg-gradient-primary p-8 text-center">
           <div className="inline-flex p-4 rounded-2xl bg-primary-foreground/20 backdrop-blur-sm mb-4">
             <MapPin className="w-8 h-8 text-primary-foreground" />

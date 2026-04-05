@@ -61,21 +61,21 @@ export const QuickGuideModal = ({ open, onClose }: QuickGuideModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <DialogContent className="max-w-sm rounded-3xl p-0 overflow-hidden">
+      <DialogContent className="max-w-sm rounded-[2rem] p-0 overflow-hidden border-border/15">
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 rounded-full p-1.5 bg-black/10 hover:bg-black/20 transition-colors"
+          className="absolute right-4 top-4 z-10 rounded-full p-1.5 bg-black/10 hover:bg-black/20 backdrop-blur-sm transition-all duration-300"
         >
           <X className="w-4 h-4 text-white" />
         </button>
 
         {/* Hero gradient */}
-        <div className={`bg-gradient-to-br ${current.color} p-10 flex flex-col items-center gap-4 transition-all duration-300`}>
-          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-lg">
+        <div className={`bg-gradient-to-br ${current.color} p-10 flex flex-col items-center gap-4 transition-all duration-500 ease-premium`}>
+          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
             <Icon className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-white font-bold text-2xl text-center">{current.title}</h2>
+          <h2 className="text-white font-display font-bold text-2xl text-center">{current.title}</h2>
         </div>
 
         {/* Body */}
