@@ -52,6 +52,8 @@ const en = {
   search_language: "Search language...",
   search_products: "Search products...",
   post_product: "Post Product",
+  find_job: "Find Job",
+  find_worker: "Find Worker",
   sign_in_required: "Sign In Required",
   sign_in_desc: "You need to sign in to post products.",
   sign_in_google: "Sign in with Google",

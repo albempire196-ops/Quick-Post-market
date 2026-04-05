@@ -22,7 +22,7 @@ interface HeaderProps {
   onSearchChange: (value: string) => void;
 }
 
-export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProps) => {
+export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -106,7 +106,7 @@ export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProp
             </Button>
 
             <Button
-              onClick={() => (typeof onAddWorker === 'function' ? onAddWorker() : navigate('/workers'))}
+              onClick={() => onAddWorker?.()}
               size="lg"
               variant="outline"
               className="gap-2 font-semibold h-12 px-5 rounded-xl"
