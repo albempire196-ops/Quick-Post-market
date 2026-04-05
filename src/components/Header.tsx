@@ -14,6 +14,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { countries } from "@/data/countries";
 
 interface HeaderProps {
   onAddProduct: () => void;
@@ -28,6 +37,8 @@ export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange 
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [jobCountryModalOpen, setJobCountryModalOpen] = useState(false);
+  const [jobCountry, setJobCountry] = useState("");
   const { canInstall, isInstalled, install } = usePWAInstall();
 
   const userEmail = user?.email || "";
@@ -96,7 +107,7 @@ export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange 
             </Button>
 
             <Button
-              onClick={() => (typeof onAddWorker === 'function' ? undefined : navigate('/jobs'))}
+              onClick={() => setJobCountryModalOpen(true)}
               size="lg"
               variant="outline"
               className="gap-2 font-semibold h-12 px-5 rounded-xl"
@@ -206,6 +217,14 @@ export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange 
                     </button>
                   )}
 
+                  <button
+                    onClick={() => { setJobCountryModalOpen(true); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left hover:bg-secondary/80 transition-colors"
+                  >
+                    <Briefcase className="w-5 h-5 text-muted-foreground" />
+                    <span className="font-medium">{t('find_job')}</span>
+                  </button>
+
                   {user && (
                     <button
                       onClick={() => { navigate(`/seller/${user.id}`); setMobileMenuOpen(false); }}
@@ -259,6 +278,40 @@ export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange 
           </div>
         )}
       </div>
+
+      {/* Job country modal */}
+      <Dialog open={jobCountryModalOpen} onOpenChange={(o) => setJobCountryModalOpen(o)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t('find_job')}</DialogTitle>
+            <DialogDescription>Choose a country to filter job listings</DialogDescription>
+          </DialogHeader>
+
+          <div className="pt-2">
+            <label className="block text-sm font-medium text-muted-foreground mb-2">Country</label>
+            <div className="max-w-xs">
+              <Select value={jobCountry} onValueChange={setJobCountry}>
+                <SelectTrigger><SelectValue placeholder="All countries" /></SelectTrigger>
+                <SelectContent className="max-h-60">
+                  <SelectItem value="">All countries</SelectItem>
+                  {countries.map((c) => (
+                    <SelectItem key={c.code} value={c.code}>
+                      <span className="flex items-center gap-2"><span>{c.flag}</span><span>{c.name}</span></span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setJobCountryModalOpen(false)}>Cancel</Button>
+              <Button onClick={() => { setJobCountryModalOpen(false); if (jobCountry) navigate(`/jobs?country=${jobCountry}`); else navigate('/jobs'); }}>
+                View Jobs
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
