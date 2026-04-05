@@ -290,10 +290,10 @@ export const Header = ({ onAddProduct, onAddWorker, searchQuery, onSearchChange 
           <div className="pt-2">
             <label className="block text-sm font-medium text-muted-foreground mb-2">Country</label>
             <div className="max-w-xs">
-              <Select value={jobCountry} onValueChange={setJobCountry}>
+              <Select value={jobCountry || "__all"} onValueChange={(v) => setJobCountry(v === "__all" ? "" : v)}>
                 <SelectTrigger><SelectValue placeholder="All countries" /></SelectTrigger>
                 <SelectContent className="max-h-60">
-                  <SelectItem value="">All countries</SelectItem>
+                  <SelectItem value="__all">All countries</SelectItem>
                   {countries.map((c) => (
                     <SelectItem key={c.code} value={c.code}>
                       <span className="flex items-center gap-2"><span>{c.flag}</span><span>{c.name}</span></span>

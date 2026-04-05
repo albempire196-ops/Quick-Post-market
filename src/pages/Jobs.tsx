@@ -132,10 +132,10 @@ const Jobs = () => {
         <div className="mb-6">
           <label className="block text-sm font-medium text-muted-foreground mb-2">Filter by country</label>
           <div className="max-w-sm">
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+            <Select value={selectedCountry || "__all"} onValueChange={(v) => setSelectedCountry(v === "__all" ? "" : v)}>
               <SelectTrigger><SelectValue placeholder="All countries" /></SelectTrigger>
               <SelectContent className="max-h-60">
-                <SelectItem value="">All countries</SelectItem>
+                <SelectItem value="__all">All countries</SelectItem>
                 {countries.map((c) => (
                   <SelectItem key={c.code} value={c.code}>
                     <span className="flex items-center gap-2"><span>{c.flag}</span><span>{c.name}</span></span>
