@@ -1,4 +1,4 @@
-import { Search, Plus, Sparkles, LogOut, Settings, Menu, Download, UserRound } from "lucide-react";
+import { Search, Plus, Sparkles, LogOut, Settings, Menu, Download, UserRound, Briefcase, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -17,6 +17,7 @@ import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 interface HeaderProps {
   onAddProduct: () => void;
+  onAddWorker?: () => void;
   searchQuery: string;
   onSearchChange: (value: string) => void;
 }
@@ -83,15 +84,37 @@ export const Header = ({ onAddProduct, searchQuery, onSearchChange }: HeaderProp
             </Button>
           )}
 
-          {/* Desktop CTA Button */}
-          <Button 
-            onClick={onAddProduct} 
-            size="lg" 
-            className="gap-2 font-semibold h-12 px-6 bg-gradient-primary hover:opacity-90 rounded-xl shadow-button hidden md:flex"
-          >
-            <Plus className="w-5 h-5" />
-            {t("post_product")}
-          </Button>
+          {/* Desktop CTA Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button 
+              onClick={onAddProduct} 
+              size="lg" 
+              className="gap-2 font-semibold h-12 px-6 bg-gradient-primary hover:opacity-90 rounded-xl shadow-button"
+            >
+              <Plus className="w-5 h-5" />
+              {t("post_product")}
+            </Button>
+
+            <Button
+              onClick={() => (typeof onAddWorker === 'function' ? undefined : navigate('/jobs'))}
+              size="lg"
+              variant="outline"
+              className="gap-2 font-semibold h-12 px-5 rounded-xl"
+            >
+              <Briefcase className="w-5 h-5" />
+              {t('find_job')}
+            </Button>
+
+            <Button
+              onClick={() => (typeof onAddWorker === 'function' ? onAddWorker() : navigate('/workers'))}
+              size="lg"
+              variant="outline"
+              className="gap-2 font-semibold h-12 px-5 rounded-xl"
+            >
+              <Users className="w-5 h-5" />
+              {t('find_worker')}
+            </Button>
+          </div>
 
           {/* Desktop nav items */}
           <div className="hidden sm:flex items-center gap-1">

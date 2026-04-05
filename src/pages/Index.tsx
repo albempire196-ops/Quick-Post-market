@@ -24,6 +24,7 @@ const Index = () => {
   const { t, preferredCountry } = useLanguage();
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddWorkerModal, setShowAddWorkerModal] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [selectedCountry] = useState<string>("al");
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,7 +48,6 @@ const Index = () => {
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.title?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-    const matchesCountry = !preferredCountry || product.country === preferredCountry;
     const matchesStatus = selectedStatus === "all" || product.status === selectedStatus;
 
     const numericPrice = extractNumericPrice(product.price);
@@ -56,7 +56,7 @@ const Index = () => {
     const matchesMinPrice = minPriceNumber === null || minPriceNumber <= 0 || (numericPrice !== null && numericPrice >= minPriceNumber);
     const matchesMaxPrice = maxPriceNumber === null || maxPriceNumber <= 0 || (numericPrice !== null && numericPrice <= maxPriceNumber);
 
-    return matchesSearch && matchesCategory && matchesCountry && matchesStatus && matchesMinPrice && matchesMaxPrice;
+    return matchesSearch && matchesCategory && matchesStatus && matchesMinPrice && matchesMaxPrice;
   }).sort((leftProduct, rightProduct) => {
     if (sortBy === "oldest") {
       return new Date(leftProduct.created_at || 0).getTime() - new Date(rightProduct.created_at || 0).getTime();
@@ -81,6 +81,14 @@ const Index = () => {
     }
   };
 
+  const handleAddWorker = () => {
+    if (!user) {
+      setShowAuthPrompt(true);
+    } else {
+      setShowAddWorkerModal(true);
+    }
+  };
+
   const features = [
     { icon: Zap, title: t("fast_listing"), desc: t("fast_listing_desc") },
     { icon: Shield, title: t("secure_transactions"), desc: t("secure_transactions_desc") },
@@ -95,6 +103,7 @@ const Index = () => {
 
       <Header
         onAddProduct={handlePostProduct}
+        onAddWorker={handleAddWorker}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
@@ -269,6 +278,7 @@ const Index = () => {
       </main>
 
       <AddProductModal open={showAddModal} onClose={() => setShowAddModal(false)} country={selectedCountry} />
+      <AddWorkerModal open={showAddWorkerModal} onClose={() => setShowAddWorkerModal(false)} />
       
       <ProductDetailModal
         open={!!selectedProduct}
