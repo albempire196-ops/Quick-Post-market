@@ -7,8 +7,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "next-themes";
 import { useColorTheme, COLOR_THEMES } from "@/contexts/ColorThemeContext";
 import { QuickGuideModal } from "@/components/QuickGuideModal";
-import { ArrowLeft, LogOut, User, Sparkles, Moon, Sun, Globe, MapPin, Search, Check, Package, Pencil, Trash2, BookOpen } from "lucide-react";
+import { ArrowLeft, LogOut, User, Sparkles, Moon, Sun, Globe, MapPin, Search, Check, Package, Pencil, Trash2, BookOpen, Download } from "lucide-react";
 import { countries } from "@/data/countries";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { useMyProducts } from "@/hooks/useMyProducts";
 import { EditProductModal } from "@/components/EditProductModal";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,6 +53,8 @@ const Settings = () => {
   const [editingSellerName, setEditingSellerName] = useState(false);
   const [sellerNameDraft, setSellerNameDraft] = useState("");
   const [savingSellerName, setSavingSellerName] = useState(false);
+  const { canInstall, isInstalled, install } = usePWAInstall();
+  const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -130,6 +133,32 @@ const Settings = () => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to update product status.");
+    }
+  };
+
+  const handleDownloadApp = async () => {
+    if (!canInstall) {
+      const ua = typeof navigator !== "undefined" ? navigator.userAgent.toLowerCase() : "";
+      const isFirefox = ua.includes("firefox");
+      if (isFirefox) {
+        toast("Firefox doesn't support the automatic install prompt. To install: open the browser menu (⋯) and choose 'Install site as app' or on mobile use 'Add to Home screen'.");
+      } else {
+        toast("Your browser doesn't support the automatic install prompt. Try opening the browser menu and look for an 'Install' or 'Add to Home screen' option, or use Chrome/Edge for the native prompt.");
+      }
+      return;
+    }
+
+    setIsInstalling(true);
+    try {
+      const success = await install();
+      if (success) {
+        toast.success("App installed successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to install app.");
+    } finally {
+      setIsInstalling(false);
     }
   };
 
@@ -515,6 +544,29 @@ const Settings = () => {
             </div>
           </div>
         </section>
+
+        {/* Download App */}
+        {!isInstalled && (
+          <section className="liquid-glass rounded-[2rem] p-8 space-y-4 animate-fade-in" style={{ animationDelay: "0.32s" }}>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-button">
+                <Download className="w-7 h-7 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="font-display font-bold text-xl">Download App</h2>
+                <p className="text-muted-foreground text-sm">Install Quick Post Market on your device</p>
+              </div>
+            </div>
+            <Button 
+              className="w-full gap-2 h-12 rounded-2xl bg-gradient-primary hover:bg-gradient-primary/90 text-primary-foreground shadow-button"
+              onClick={handleDownloadApp}
+              disabled={isInstalling}
+            >
+              <Download className="w-5 h-5" />
+              {isInstalling ? "Installing..." : canInstall ? "Download App" : "Install / How to"}
+            </Button>
+          </section>
+        )}
 
         {/* Quick Guide */}
         <section className="liquid-glass rounded-[2rem] p-8 space-y-4 animate-fade-in" style={{ animationDelay: "0.35s" }}>
