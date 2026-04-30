@@ -141,9 +141,9 @@ const Settings = () => {
       const ua = typeof navigator !== "undefined" ? navigator.userAgent.toLowerCase() : "";
       const isFirefox = ua.includes("firefox");
       if (isFirefox) {
-        toast("Firefox doesn't support the automatic install prompt. To install: open the browser menu (⋯) and choose 'Install site as app' or on mobile use 'Add to Home screen'.");
+        toast.info("Firefox doesn't support the automatic install prompt. To install: open the browser menu (⋯) and choose 'Install site as app' or on mobile use 'Add to Home screen'.");
       } else {
-        toast("Your browser doesn't support the automatic install prompt. Try opening the browser menu and look for an 'Install' or 'Add to Home screen' option, or use Chrome/Edge for the native prompt.");
+        toast.info("Your browser doesn't support the automatic install prompt. Try opening the browser menu and look for an 'Install' or 'Add to Home screen' option, or use Chrome/Edge for the native prompt.");
       }
       return;
     }
